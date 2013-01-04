@@ -1,0 +1,38 @@
+{
+    "name": "iwalz/WalyDevcloudHook",
+    "description": "A ZF2 module to provide a Zend Developer Cloud deployment on github hook",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "version": "0.0.1",
+    "keywords": [
+        "zend developer cloud",
+        "github",
+        "hook"
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.zendframework.com/"
+        }
+    ],
+    "homepage": "https://github.com/iwalz/WalyDevcloudHook",
+    "authors": [
+        {
+            "name": "Ingo Walz",
+            "email": "ingo.walz@googlemail.com",
+            "homepage": "http://www.rubber-duckling.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zend-modulemanager": "2.0.*",
+        "zendframework/zend-mvc": "2.0.*"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "WalyDevcloudHook": "library/",
+            "WalyDevcloudHookTest": "tests/"
+        }
+    }
+}
