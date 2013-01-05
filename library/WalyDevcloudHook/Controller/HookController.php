@@ -1,5 +1,5 @@
 <?php
-namespace WalyDevcloudHook;
+namespace WalyDevcloudHook\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 
