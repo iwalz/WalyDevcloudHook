@@ -1,10 +1,9 @@
 <?php
 namespace WalyDevcloudHook\Hook\Github\Payload;
 
-class Author implements PayloadInterface
+class Owner implements PayloadInterface
 {
     protected $name = null;
-    protected $username = null;
     protected $email = null;
 
     public function setEmail($email)
@@ -26,15 +25,4 @@ class Author implements PayloadInterface
     {
         return $this->name;
     }
-
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
-    }
 }
-
