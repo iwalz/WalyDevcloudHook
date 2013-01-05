@@ -26,7 +26,8 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zend-modulemanager": "2.0.*",
-        "zendframework/zend-mvc": "2.0.*"
+        "zendframework/zend-mvc": "2.0.*",
+        "zendserverapi/zendserverapi": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
