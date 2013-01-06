@@ -29,7 +29,7 @@ class Github
     {
         $repositoryUrl = $this->payload->getRepository()->getUrl();
         $repository = str_replace("git://github.com/", '', $repositoryUrl);
-        $cmd = 'git clone';
+        $cmd = '/usr/local/bin/git clone';
         $cmd .= ' --branch=' . $this->payload->getBranch();
         $cmd .= ' ' . $repositoryUrl;
         $cmd .= ' ' . $repository;
@@ -46,7 +46,7 @@ class Github
 
     public function checkoutCommit()
     {
-        $cmd = 'git checkout -qf ';
+        $cmd = '/usr/local/bin/git checkout -qf ';
         $cmd .= $this->payload->getHeadCommit()->getId();
 
         $cmd = escapeshellcmd($cmd);
