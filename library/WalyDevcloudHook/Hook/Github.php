@@ -29,13 +29,13 @@ class Github
     {
         $repositoryUrl = $this->payload->getRepository()->getUrl();
         $repository = str_replace("git://github.com/", '', $repositoryUrl);
-        $cmd = '/usr/local/bin/git clone';
+        $cmd = 'git clone';
         $cmd .= ' --branch=' . $this->payload->getBranch();
         $cmd .= ' ' . $repositoryUrl;
         $cmd .= ' ' . $repository;
 
         $cmd = escapeshellcmd($cmd);
-        $result = system($cmd . ' &> /tmp/logs');
+        $result = system($cmd);
 
         if (false !== $repository) {
             $this->projectDirectory = $this->directory . DIRECTORY_SEPARATOR . $repository;
@@ -46,7 +46,7 @@ class Github
 
     public function checkoutCommit()
     {
-        $cmd = '/usr/local/bin/git checkout -qf ';
+        $cmd = 'git checkout -qf ';
         $cmd .= $this->payload->getHeadCommit()->getId();
 
         $cmd = escapeshellcmd($cmd);
@@ -60,8 +60,6 @@ class Github
     {
         $this->directory = $directory;
         chdir($this->directory);
-        $logs = file_get_contents('/tmp/logs');
-        file_put_contents('/tmp/logs', $logs . PHP_EOL . $this->directory);
     }
 
     public function getDirectory()
