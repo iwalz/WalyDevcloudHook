@@ -14,10 +14,6 @@ class Github
     public function __construct(Payload $payload)
     {
         ob_start();
-        var_dump($payload);
-        file_put_contents('/tmp/logs', ob_get_flush());
-
-        ob_start();
         $available = system('git --help');
         if (false === $available) {
             throw new \RuntimeException('Git needs to be in your $PATH');
@@ -27,8 +23,6 @@ class Github
         $this->payload = $payload;
         $this->currentDirectory = getcwd();
         $this->setDirectory(sys_get_temp_dir());
-
-
     }
 
     public function cloneRepository()
@@ -49,9 +43,7 @@ class Github
         }
 
         $logs = file_get_contents('/tmp/logs');
-        ob_start();
-        var_dump($result);
-        file_put_contents('/tmp/logs', $logs . ob_get_flush() . PHP_EOL . $cmd);
+        file_put_contents('/tmp/logs', $logs . PHP_EOL . $cmd);
 
         return $result !== false ? true : false;
     }
@@ -66,9 +58,7 @@ class Github
         $result = system($cmd);
 
         $logs = file_get_contents('/tmp/logs');
-        ob_start();
-        var_dump($result);
-        file_put_contents('/tmp/logs', $logs . ob_get_flush() . PHP_EOL . $cmd);
+        file_put_contents('/tmp/logs', $logs . PHP_EOL . $cmd);
 
         return $result !== false ? true : false;
     }
