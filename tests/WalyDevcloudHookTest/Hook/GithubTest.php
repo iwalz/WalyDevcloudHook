@@ -57,7 +57,7 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($payload->getRepository()->getPrivate());
         $this->assertSame(7, $payload->getRepository()->getWatchers());
         $this->assertFalse($payload->getRepository()->getFork());
-        $this->assertSame('https://github.com/iwalz/zf2-doctrine2-getting-started', $payload->getRepository()->getUrl());
+        $this->assertSame('git://github.com/iwalz/zf2-doctrine2-getting-started', $payload->getRepository()->getUrl());
         $this->assertSame('PHP', $payload->getRepository()->getLanguage());
         $this->assertSame(5388613, $payload->getRepository()->getId());
         $this->assertSame('2013-01-04T16:30:30-08:00', $payload->getRepository()->getPushedAt());

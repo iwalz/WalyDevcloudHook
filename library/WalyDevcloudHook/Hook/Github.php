@@ -42,9 +42,6 @@ class Github
             $this->projectDirectory = $this->directory . DIRECTORY_SEPARATOR . $repository;
         }
 
-        $logs = file_get_contents('/tmp/logs');
-        file_put_contents('/tmp/logs', $logs . PHP_EOL . $cmd);
-
         return $result !== false ? true : false;
     }
 
@@ -56,9 +53,6 @@ class Github
         $cmd = escapeshellcmd($cmd);
 
         $result = system($cmd);
-
-        $logs = file_get_contents('/tmp/logs');
-        file_put_contents('/tmp/logs', $logs . PHP_EOL . $cmd);
 
         return $result !== false ? true : false;
     }
