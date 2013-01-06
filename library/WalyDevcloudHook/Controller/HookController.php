@@ -11,7 +11,9 @@ class HookController extends AbstractActionController
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $payload = new PayloadAdapter($request->getPost('payload'));
+            $json = $request->getPost('payload');
+            $payload = new PayloadAdapter($json);
+            file_put_contents('/tmp/request', $json);
             $github = new Github($payload->parse());
             $github->cloneRepository();
             $github->checkoutCommit();
