@@ -2,7 +2,10 @@
 namespace WalyDevcloudHook\Hook\Github;
 
 use WalyDevcloudHook\Hook\Github\Payload\PayloadInterface,
-        WalyDevcloudHook\Hook\Github\Payload\Repository;
+    WalyDevcloudHook\Hook\Github\Payload\Pusher,
+    WalyDevcloudHook\Hook\Github\Payload\Repository,
+    WalyDevcloudHook\Hook\Github\Payload\HeadCommit,
+    WalyDevcloudHook\Hook\Github\Payload\Commit;
 
 class Payload implements PayloadInterface
 {
