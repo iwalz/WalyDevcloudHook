@@ -1,7 +1,8 @@
 <?php
 namespace WalyDevcloudHook\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\AbstractActionController,
+    WalyDevcloudHook\Hook\Github;
 
 class HookController extends AbstractActionController
 {
@@ -9,8 +10,9 @@ class HookController extends AbstractActionController
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
-            var_dump($request->getPost('payload'));
-            file_put_contents('/tmp/request', $request->getPost('payload'));
+            $github = new Github($request->getPost('payload'));
+            $github->cloneRepository();
+            $github->checkoutCommit();
         }
 
         return false;

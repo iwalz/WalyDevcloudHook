@@ -81,7 +81,7 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($payload->getCreated());
     }
 
-    public function testForSilentGitHelpCall()
+    public function testGitClone()
     {
         $adapter = new PayloadAdapter(file_get_contents(__DIR__.'/../TestAssets/payload.json'));
         $payload = $adapter->parse();
@@ -91,5 +91,18 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_dir($github->getProjectDirectory()));
         $zdpack = new \ZendService\ZendServerAPI\Zdpack();
         $zdpack->deleteFolder($github->getProjectDirectory());
+    }
+
+    public function testChdirs()
+    {
+        $adapter = new PayloadAdapter(file_get_contents(__DIR__.'/../TestAssets/payload.json'));
+        $payload = $adapter->parse();
+        $current_dir = getcwd();
+        $github = new Github($payload);
+        $new_dir = getcwd();
+
+        $this->assertEquals($new_dir, sys_get_temp_dir());
+        unset($github);
+        $this->assertEquals($current_dir, getcwd());
     }
 }

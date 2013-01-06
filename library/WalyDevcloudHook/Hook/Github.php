@@ -47,6 +47,18 @@ class Github
         return $result !== false ? true : false;
     }
 
+    public function checkoutCommit()
+    {
+        $cmd = 'git checkout -qf ';
+        $cmd .= $this->payload->getHeadCommit()->getId();
+
+        $cmd = escapeshellcmd($cmd);
+
+        $result = system($cmd);
+
+        return $result !== false ? true : false;
+    }
+
     public function setDirectory($directory)
     {
         $this->directory = $directory;
