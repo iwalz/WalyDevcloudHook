@@ -35,7 +35,7 @@ class Github
         $cmd .= ' ' . $repository;
 
         $cmd = escapeshellcmd($cmd);
-
+        file_put_contents('/tmp/logs', $cmd);
         $result = system($cmd);
 
         if (false !== $repository) {
