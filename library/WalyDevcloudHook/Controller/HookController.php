@@ -42,6 +42,8 @@ class HookController extends AbstractActionController
             unlink($file);
         }
 
-        return false;
+        $viewModel = new \Zend\View\Model\ViewModel();
+        $viewModel->setTerminal(false);
+        return $viewModel;
     }
 }
