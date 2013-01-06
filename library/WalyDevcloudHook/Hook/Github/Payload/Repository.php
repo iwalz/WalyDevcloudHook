@@ -193,7 +193,7 @@ class Repository implements PayloadInterface
 
     public function setUrl($url)
     {
-        $this->url = $url;
+        $this->url = str_replace('https', 'git', $url);
     }
 
     public function getUrl()
