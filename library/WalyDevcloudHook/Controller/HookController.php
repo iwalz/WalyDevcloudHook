@@ -28,7 +28,7 @@ class HookController extends AbstractActionController
             unset($xml->eula);
             file_put_contents('/tmp/test/deployment.xml', (string)$xml->asXML());
             $zdpack->copyFolder($github->getProjectDirectory(), '/tmp/test/data');
-            #$file = $zdpack->pack('/tmp/test', '/tmp');
+            $file = $zdpack->pack('/tmp/test', '/tmp');
 
             #$zdpack->deleteFolder('/tmp/test');
             #$zdpack->deleteFolder($github->getProjectDirectory());
