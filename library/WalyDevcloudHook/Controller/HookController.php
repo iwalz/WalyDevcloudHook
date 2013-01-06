@@ -8,7 +8,11 @@ class HookController extends AbstractActionController
     public function indexAction()
     {
         $request = $this->getRequest();
-        var_dump((string)$request);
-        file_put_contents('/tmp/request', $request);
+        if ($request->isPost()) {
+            var_dump($request->getPost('payload'));
+            file_put_contents('/tmp/request', $request->getPost('payload'));
+        }
+
+
     }
 }

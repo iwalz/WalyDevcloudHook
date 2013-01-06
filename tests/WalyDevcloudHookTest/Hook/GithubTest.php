@@ -5,7 +5,8 @@ use WalyDevcloudHook\Hook\Github\Adapter\CommitAdapter,
     WalyDevcloudHook\Hook\Github\Adapter\PayloadAdapter,
     WalyDevcloudHook\Hook\Github\Payload\Committer,
     WalyDevcloudHook\Hook\Github\Payload\Owner,
-    WalyDevcloudHook\Hook\Github\Payload\Author;
+    WalyDevcloudHook\Hook\Github\Payload\Author,
+    WalyDevcloudHook\Hook\Github;
 
 class GithubTest extends \PHPUnit_Framework_TestCase
 {
@@ -78,5 +79,17 @@ class GithubTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('https://github.com/iwalz/zf2-doctrine2-getting-started/compare/e00126fbef13...6346230ec7a1', $payload->getCompare());
         $this->assertSame('e00126fbef13b3a30e86f7ad8811af95050d986a', $payload->getBefore());
         $this->assertFalse($payload->getCreated());
+    }
+
+    public function testForSilentGitHelpCall()
+    {
+        $adapter = new PayloadAdapter(file_get_contents(__DIR__.'/../TestAssets/payload.json'));
+        $payload = $adapter->parse();
+        $github = new Github($payload);
+        $github->cloneRepository();
+
+        $this->assertTrue(is_dir($github->getProjectDirectory()));
+        $zdpack = new \ZendService\ZendServerAPI\Zdpack();
+        $zdpack->deleteFolder($github->getProjectDirectory());
     }
 }

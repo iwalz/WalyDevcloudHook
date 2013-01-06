@@ -25,6 +25,7 @@ class Payload implements PayloadInterface
     protected $after = null;
     protected $deleted = null;
     protected $ref = null;
+    protected $branch = null;
     protected $commits = array();
     protected $compare = null;
     protected $before = null;
@@ -158,4 +159,8 @@ class Payload implements PayloadInterface
         return $this->repository;
     }
 
+    public function getBranch()
+    {
+        return str_replace('refs/heads/', '', $this->getRef());
+    }
 }
