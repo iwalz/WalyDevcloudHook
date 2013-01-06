@@ -31,12 +31,13 @@ class Github
         $repository = str_replace('git://github.com/', '', $repositoryUrl);
         $cmd = '/usr/local/bin/git clone';
         $cmd .= ' --branch=' . $this->payload->getBranch();
-        $cmd .= ' --depth=100 --quiet ' . $repositoryUrl;
+        $cmd .= ' ' . $repositoryUrl;
         $cmd .= ' ' . $repository;
 
         $cmd = escapeshellcmd($cmd);
-        file_put_contents('/tmp/logs', $cmd);
+        ob_start();
         $result = system($cmd);
+        file_put_contents('/tmp/logs', ob_end_flush());
 
         if (false !== $repository) {
             $this->projectDirectory = $this->directory . DIRECTORY_SEPARATOR . $repository;
