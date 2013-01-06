@@ -51,7 +51,7 @@ class Github
         $logs = file_get_contents('/tmp/logs');
         ob_start();
         var_dump($result);
-        file_put_contents('/tmp/logs', $logs . ob_get_flush());
+        file_put_contents('/tmp/logs', $logs . ob_get_flush() . PHP_EOL . $cmd);
 
         return $result !== false ? true : false;
     }
@@ -68,7 +68,7 @@ class Github
         $logs = file_get_contents('/tmp/logs');
         ob_start();
         var_dump($result);
-        file_put_contents('/tmp/logs', $logs . ob_get_flush());
+        file_put_contents('/tmp/logs', $logs . ob_get_flush() . PHP_EOL . $cmd);
 
         return $result !== false ? true : false;
     }
