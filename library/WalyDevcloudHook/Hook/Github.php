@@ -13,7 +13,9 @@ class Github
 
     public function __construct(Payload $payload)
     {
-
+        ob_start();
+        var_dump($payload);
+        file_put_contents('/tmp/logs', ob_get_flush());
 
         ob_start();
         $available = system('git --help');
@@ -25,6 +27,8 @@ class Github
         $this->payload = $payload;
         $this->currentDirectory = getcwd();
         $this->setDirectory(sys_get_temp_dir());
+
+
     }
 
     public function cloneRepository()
@@ -44,6 +48,11 @@ class Github
             $this->projectDirectory = $this->directory . DIRECTORY_SEPARATOR . $repository;
         }
 
+        $logs = file_get_contents('/tmp/logs');
+        ob_start();
+        var_dump($result);
+        file_put_contents('/tmp/logs', $logs . ob_get_flush());
+
         return $result !== false ? true : false;
     }
 
@@ -55,6 +64,11 @@ class Github
         $cmd = escapeshellcmd($cmd);
 
         $result = system($cmd);
+
+        $logs = file_get_contents('/tmp/logs');
+        ob_start();
+        var_dump($result);
+        file_put_contents('/tmp/logs', $logs . ob_get_flush());
 
         return $result !== false ? true : false;
     }
