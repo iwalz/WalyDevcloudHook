@@ -32,11 +32,11 @@ class HookController extends AbstractActionController
             $zdpack->deleteFolder('/tmp/test');
             $zdpack->deleteFolder($github->getProjectDirectory());
 
-            $deployment = new \ZendService\ZendServerAPI\Deployment();
-            $config = $deployment->getPluginManager()->get('config');
-            $deployment->applicationDeploy($file, "http://" . $config->getHost() . '/' . $payload->getRepository()->getName());
+            #$deployment = new \ZendService\ZendServerAPI\Deployment();
+            #$config = $deployment->getPluginManager()->get('config');
+            #$deployment->applicationDeploy($file, "http://" . $config->getHost() . '/' . $payload->getRepository()->getName());
 
-            unlink($file);
+            #unlink($file);
         }
 
         return false;
