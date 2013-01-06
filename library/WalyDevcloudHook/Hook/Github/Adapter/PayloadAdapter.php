@@ -28,7 +28,9 @@ class PayloadAdapter implements AdapterInterface
         $repository->setWatchers((int)$plainPayload->repository->watchers);
         $repository->setFork((bool)$plainPayload->repository->fork);
         $repository->setUrl((string)$plainPayload->repository->url);
-        $repository->setLanguage((string)$plainPayload->repository->language);
+        if (isset($plainPayload->repository->language)) {
+            $repository->setLanguage((string)$plainPayload->repository->language);
+        }
         $repository->setId((int)$plainPayload->repository->id);
         $repository->setPushedAt((string)$plainPayload->repository->pushed_at);
         $repository->setHasDownloads((bool)$plainPayload->repository->has_downloads);
