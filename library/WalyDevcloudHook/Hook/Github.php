@@ -35,9 +35,7 @@ class Github
         $cmd .= ' ' . $repository;
 
         $cmd = escapeshellcmd($cmd);
-        ob_start();
-        $result = system($cmd);
-        file_put_contents('/tmp/logs', ob_end_flush());
+        $result = system($cmd . ' &> /tmp/logs');
 
         if (false !== $repository) {
             $this->projectDirectory = $this->directory . DIRECTORY_SEPARATOR . $repository;
@@ -62,6 +60,8 @@ class Github
     {
         $this->directory = $directory;
         chdir($this->directory);
+        $logs = file_get_contents('/tmp/logs');
+        file_put_contents('/tmp/logs', $logs . PHP_EOL . $this->directory);
     }
 
     public function getDirectory()
