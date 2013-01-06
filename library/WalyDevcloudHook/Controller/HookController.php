@@ -13,6 +13,6 @@ class HookController extends AbstractActionController
             file_put_contents('/tmp/request', $request->getPost('payload'));
         }
 
-
+        return false;
     }
 }
