@@ -28,7 +28,7 @@ class Github
     public function cloneRepository()
     {
         $repositoryUrl = $this->payload->getRepository()->getUrl();
-        $repository = str_replace('https://github.com/', '', $repositoryUrl);
+        $repository = str_replace('git://github.com/', '', $repositoryUrl);
         $cmd = '/usr/local/bin/git clone';
         $cmd .= ' --branch=' . $this->payload->getBranch();
         $cmd .= ' --depth=100 --quiet ' . $repositoryUrl;
