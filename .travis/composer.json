@@ -1,4 +1,10 @@
 {
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/iwalz/WalyDevcloudHook"
+		}
+	],
 	"require": {
 		"iwalz/walydevcloudhook": "*@dev"
 	}
