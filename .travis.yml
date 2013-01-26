@@ -9,7 +9,7 @@ before_install:
  - cd ZendSkeletonApplication
  - cp ../WalyDevcloudHook/.travis/composer.json ./
  - curl -s http://getcomposer.org/installer | php
- - php composer.phar install --dev
+ - php composer.phar install --dev --prefer-source
  - rm -rf vendor/iwalz/walydevcloudhook
  - cp -r ../WalyDevcloudHook vendor/iwalz/walydevcloudhook
  - cd vendor/iwalz/walydevcloudhook
