@@ -1,80 +1,110 @@
 <?php
 namespace WalyDevcloudHook\Hook;
 
-use WalyDevcloudHook\Hook,
-    WalyDevcloudHook\Hook\Github\Payload;
+use Gitonomy\Git\Admin;
+use Gitonomy\Git\Repository;
+use WalyDevcloudHook\Hook;
+use WalyDevcloudHook\Hook\Github\Payload;
 
 class Github
 {
+    /**
+     * @var Payload
+     */
     protected $payload = null;
+    /**
+     * @var string
+     */
     protected $directory = null;
-    protected $currentDirectory = null;
-    protected $projectDirectory = null;
+    /**
+     * @var Repository
+     */
+    protected $repository = null;
+    /**
+     * @var Admin
+     */
+    protected $admin = null;
 
-    public function __construct(Payload $payload)
+    /**
+     * @param Payload $payload   The payload
+     * @param string $directory  The directory where to save the repo to
+     */
+    public function __construct(Payload $payload, $directory = null)
     {
-        ob_start();
-        $available = system('git --help');
-        if (false === $available) {
-            throw new \RuntimeException('Git needs to be in your $PATH');
-        }
-        ob_end_clean();
-
         $this->payload = $payload;
-        $this->currentDirectory = getcwd();
-        $this->setDirectory(sys_get_temp_dir());
+        $this->setDirectory($directory ?: sys_get_temp_dir());
+        $this->admin = new Admin();
     }
 
+    /**
+     * Clone repository to soecified directory
+     */
     public function cloneRepository()
     {
-        $repositoryUrl = $this->payload->getRepository()->getUrl();
-        $repository = str_replace("git://github.com/", '', $repositoryUrl);
-        $cmd = '/usr/local/bin/git clone';
-        $cmd .= ' --branch=' . $this->payload->getBranch();
-        $cmd .= ' ' . $repositoryUrl;
-        $cmd .= ' ' . $repository;
-
-        $cmd = escapeshellcmd($cmd);
-        $result = system($cmd);
-
-        if (false !== $repository) {
-            $this->projectDirectory = $this->directory . DIRECTORY_SEPARATOR . $repository;
-        }
-
-        return $result !== false ? true : false;
+        $this->repository = $this->admin->cloneTo(
+            $this->getDirectory() . DIRECTORY_SEPARATOR . $this->payload->getRepository()->getName(),
+            $this->payload->getRepository()->getUrl()
+        );
     }
 
+    /**
+     * Checkout the commit that is specified in the payload
+     */
     public function checkoutCommit()
     {
-        $cmd = '/usr/local/bin/git checkout -qf ';
-        $cmd .= $this->payload->getHeadCommit()->getId();
-
-        $cmd = escapeshellcmd($cmd);
-
-        $result = system($cmd);
-
-        return $result !== false ? true : false;
+        $this->repository->getCommit($this->payload->getHeadCommit()->getId());
     }
 
+    /**
+     * Set the directory
+     *
+     * @param string $directory
+     */
     public function setDirectory($directory)
     {
         $this->directory = $directory;
-        chdir($this->directory);
     }
 
+    /**
+     * Get the directory
+     *
+     * @return string
+     */
     public function getDirectory()
     {
         return $this->directory;
     }
 
-    public function getProjectDirectory()
+    /**
+     * @return Admin
+     */
+    public function getAdmin()
     {
-        return $this->projectDirectory;
+        return $this->admin;
     }
 
-    public function __destruct()
+    /**
+     * @param Admin $admin
+     */
+    public function setAdmin(Admin $admin)
     {
-        chdir($this->currentDirectory);
+        $this->admin = $admin;
+    }
+
+    /**
+     * @return Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+    /**
+     * @param Repository $repository
+     */
+    public function setRepository(Repository $repository)
+    {
+        $this->repository = $repository;
     }
 }
 
