@@ -6,6 +6,9 @@
 		}
 	],
 	"require": {
-		"iwalz/walydevcloudhook": "*@dev"
+		"iwalz/walydevcloudhook": "*@dev",
+		"zendserverapi/zendserverapi": "*@dev",
+		"gitonomy/gitlib": "*@dev",
+		"zendframework/zendframework": "2.*"
 	}
 }
