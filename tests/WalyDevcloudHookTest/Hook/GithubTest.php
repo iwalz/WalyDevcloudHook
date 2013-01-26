@@ -85,24 +85,20 @@ class GithubTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = new PayloadAdapter(file_get_contents(__DIR__.'/../TestAssets/payload.json'));
         $payload = $adapter->parse();
+        $admin = $this->getMock('Gitonomy\Git\Repository', array('getCommit'), array(sys_get_temp_dir()));
+        $admin->expects($this->once())->method('getCommit')->with(
+            '6346230ec7a1ecec861f7884070af5a37d3b72d9'
+        );
+
         $github = new Github($payload);
         $github->cloneRepository();
+        $github->setRepository($admin);
+        $github->checkoutCommit();
 
         $this->assertTrue(is_dir($github->getProjectDirectory()));
         $zdpack = new \ZendService\ZendServerAPI\Zdpack();
         $zdpack->deleteFolder($github->getProjectDirectory());
+        $this->assertFalse(is_dir($github->getProjectDirectory()));
     }
 
-    public function testChdirs()
-    {
-        $adapter = new PayloadAdapter(file_get_contents(__DIR__.'/../TestAssets/payload.json'));
-        $payload = $adapter->parse();
-        $current_dir = getcwd();
-        $github = new Github($payload);
-        $new_dir = getcwd();
-
-        $this->assertEquals($new_dir, sys_get_temp_dir());
-        unset($github);
-        $this->assertEquals($current_dir, getcwd());
-    }
 }

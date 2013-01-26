@@ -24,6 +24,10 @@ class Github
      * @var Admin
      */
     protected $admin = null;
+    /**
+     * @var string
+     */
+    protected $projectDir = null;
 
     /**
      * @param Payload $payload   The payload
@@ -45,6 +49,7 @@ class Github
             $this->getDirectory() . DIRECTORY_SEPARATOR . $this->payload->getRepository()->getName(),
             $this->payload->getRepository()->getUrl()
         );
+        $this->projectDir = $this->repository->getPath();
     }
 
     /**
@@ -105,6 +110,14 @@ class Github
     public function setRepository(Repository $repository)
     {
         $this->repository = $repository;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProjectDirectory()
+    {
+        return $this->projectDir;
     }
 }
 
