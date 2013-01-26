@@ -1,0 +1,5 @@
+{
+	"require": {
+		"iwalz/walydevcloudhook": "*@dev"
+	}
+}
