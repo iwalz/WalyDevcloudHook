@@ -4,8 +4,16 @@ php:
   - "5.4"
 
 before_install:
- - composer install --dev
- - phpenv rehash
+ - cd ..
+ - git clone git://github.com/zendframework/ZendSkeletonApplication.git
+ - cd ZendSkeletonApplication
+ - cp ../WalyDevcloudHook/.travis/composer.json ./
+ - curl -s http://getcomposer.org/installer | php
+ - php composer.phar install --dev
+ - rm -rf vendor/iwalz/walydevcloudhook
+ - cp -r ../WalyDevcloudHook vendor/iwalz/walydevcloudhook
+ - cd vendor/iwalz/walydevcloudhook
+ - ls -la ../
 
 script:
  - cd tests/
