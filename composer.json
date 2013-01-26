@@ -28,7 +28,7 @@
         "zendframework/zend-modulemanager": "2.0.*",
         "zendframework/zend-mvc": "2.0.*",
         "zendserverapi/zendserverapi": "*@dev",
-        "gitonomy/gitlib": "dev-master"
+        "gitonomy/gitlib": "*@dev"
     },
     "minimum-stability": "dev",
     "autoload": {
