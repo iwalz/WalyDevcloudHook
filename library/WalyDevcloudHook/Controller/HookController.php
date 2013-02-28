@@ -1,18 +1,28 @@
 <?php
 namespace WalyDevcloudHook\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController,
-    WalyDevcloudHook\Hook\Github,
-    WalyDevcloudHook\Hook\Github\Adapter\PayloadAdapter;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use ZendService\ZendServerAPI\Zdpack;
+use ZendService\ZendServerAPI\Deployment;
+use WalyDevcloudHook\Hook\Github;
+use WalyDevcloudHook\Hook\Github\Adapter\PayloadAdapter;
 
 class HookController extends AbstractActionController
 {
     public function indexAction()
     {
         $request = $this->getRequest();
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(false);
 
         if ($request->isPost()) {
             $json = $request->getPost('payload');
+            if (!$json) {
+
+                return $viewModel;
+            }
+
             $payload = new PayloadAdapter($json);
             file_put_contents('/tmp/request', $json);
 
@@ -20,7 +30,7 @@ class HookController extends AbstractActionController
             $github->cloneRepository();
             $github->checkoutCommit();
 
-            $zdpack = new \ZendService\ZendServerAPI\Zdpack();
+            $zdpack = new Zdpack();
             $zdpack->create('test', '/tmp');
 
             $xml = simplexml_load_file('/tmp/test/deployment.xml');
@@ -34,16 +44,17 @@ class HookController extends AbstractActionController
             $zdpack->deleteFolder('/tmp/test');
             $zdpack->deleteFolder($github->getProjectDirectory());
 
-            $deployment = new \ZendService\ZendServerAPI\Deployment();
+            $deployment = new Deployment();
             $config = $deployment->getPluginManager()->get('config');
-            $app = $deployment->applicationDeploy($file, "http://" . $config->getHost() . '/' . $payload->getRepository()->getName());
+            $app = $deployment->applicationDeploy(
+                $file,
+                "http://" . $config->getHost() . '/' . $payload->getRepository()->getName()
+            );
             $deployment->waitForStableState($app->getId());
 
             unlink($file);
         }
 
-        $viewModel = new \Zend\View\Model\ViewModel();
-        $viewModel->setTerminal(false);
         return $viewModel;
     }
 }
