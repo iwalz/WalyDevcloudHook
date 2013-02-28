@@ -1,6 +1,17 @@
 <?php
 
 return array(
+    'devcloud_hook' => array(
+        'logger' => array(
+            'loglevel' => \Zend\Log\Logger::DEBUG,
+            'logdir' => __DIR__ . '/../logs'
+        )
+    ),
+    'service_manager' => array(
+        'factories' => array(
+            'WalyDevcloudHook\Factories\LoggerFactory' => 'WalyDevcloudHook\Factories\LoggerServiceFactory'
+        )
+    ),
     'controllers' => array(
         'invokables' => array(
             'WalyDevcloudHook\\Controller\\HookController' => 'WalyDevcloudHook\\Controller\\HookController'
