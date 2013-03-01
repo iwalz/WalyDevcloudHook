@@ -15,6 +15,7 @@ class HookController extends AbstractActionController
         $request = $this->getRequest();
         $viewModel = new ViewModel();
         $viewModel->setTerminal(false);
+        $logger = $this->serviceLocator->get('logger');
 
         if ($request->isPost()) {
             $json = $request->getPost('payload');
@@ -24,25 +25,33 @@ class HookController extends AbstractActionController
             }
 
             $payload = new PayloadAdapter($json);
-            file_put_contents('/tmp/request', $json);
+            $hookData = $payload->parse();
 
-            $github = new Github($payload->parse());
+            $github = new Github($hookData);
             $github->cloneRepository();
             $github->checkoutCommit();
+            $logger->info('Clone repository "' . $github->getRepository() . '" ('.$github->getHeadCommit()->getId().')');
+
+            $tmpDir = rtrim(sys_get_temp_dir(), '/');
 
             $zdpack = new Zdpack();
-            $zdpack->create('test', '/tmp');
+            $zdpack->create('test', $tmpDir);
 
-            $xml = simplexml_load_file('/tmp/test/deployment.xml');
+            $xml = simplexml_load_file($tmpDir.'/test/deployment.xml');
             unset($xml->parameters);
             unset($xml->eula);
             unset($xml->dependencies);
-            file_put_contents('/tmp/test/deployment.xml', (string)$xml->asXML());
-            $zdpack->copyFolder($github->getProjectDirectory(), '/tmp/test/data');
-            $file = $zdpack->pack('/tmp/test', '/tmp');
+            file_put_contents($tmpDir.'/test/deployment.xml', (string)$xml->asXML());
+            $logger->debug('Generated deployment.xml');
+            $zdpack->copyFolder($github->getProjectDirectory(), $tmpDir.'/test/data');
+            $file = $zdpack->pack($tmpDir.'/test', $tmpDir);
+            if ($file) {
+                $logger->debug('Generated .zpk');
+            }
 
-            $zdpack->deleteFolder('/tmp/test');
+            $zdpack->deleteFolder($tmpDir.'/test');
             $zdpack->deleteFolder($github->getProjectDirectory());
+            $logger->debug('Deleted tmp folder');
 
             $deployment = new Deployment();
             $config = $deployment->getPluginManager()->get('config');
@@ -51,6 +60,7 @@ class HookController extends AbstractActionController
                 "http://" . $config->getHost() . '/' . $payload->getRepository()->getName()
             );
             $deployment->waitForStableState($app->getId());
+            $logger->debug('Application ' . $app->getId() . ' successful deployed');
 
             unlink($file);
         }
