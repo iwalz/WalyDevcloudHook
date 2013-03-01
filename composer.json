@@ -1,5 +1,5 @@
 {
-    "name": "iwalz/WalyDevcloudHook",
+    "name": "iwalz/waly-devcloud-hook",
     "description": "A ZF2 module to provide a Zend Developer Cloud deployment on github hook",
     "type": "library",
     "license": "BSD-3-Clause",
