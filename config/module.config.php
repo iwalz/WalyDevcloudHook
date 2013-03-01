@@ -4,7 +4,7 @@ return array(
     'devcloud_hook' => array(
         'logger' => array(
             'loglevel' => \Zend\Log\Logger::DEBUG,
-            'logdir' => __DIR__ . '/../logs'
+            'logdir' => realpath(__DIR__ . '/../logs')
         )
     ),
     'service_manager' => array(
