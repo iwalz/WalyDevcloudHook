@@ -9,12 +9,6 @@
         "github",
         "hook"
     ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.zendframework.com/"
-        }
-    ],
     "homepage": "https://github.com/iwalz/WalyDevcloudHook",
     "authors": [
         {
@@ -25,8 +19,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-modulemanager": "2.0.*",
-        "zendframework/zend-mvc": "2.0.*",
+        "zendframework/zend-modulemanager": "dev-master",
+        "zendframework/zend-mvc": "dev-master",
         "zendserverapi/zendserverapi": "dev-master",
         "gitonomy/gitlib": "dev-master"
     },
