@@ -1,14 +1,7 @@
 {
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/iwalz/WalyDevcloudHook"
-		}
-	],
+    "minimum-stability": "dev",
 	"require": {
-		"iwalz/walydevcloudhook": "*@dev",
-		"zendserverapi/zendserverapi": "*@dev",
-		"gitonomy/gitlib": "*@dev",
+		"iwalz/waly-devcloud-hook": "dev-master",
 		"zendframework/zendframework": "2.*"
 	}
 }
