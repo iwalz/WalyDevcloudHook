@@ -15,7 +15,8 @@ class LoggerServiceFactory implements FactoryInterface
         $loggerConfig = $config['devcloud_hook']['logger'];
         $logger = new Logger();
 
-        var_dump($loggerConfig['logdir']);
+        var_dump("ads");
+        var_dump($loggerConfig);
         chmod($loggerConfig['logdir'], 0755);
         $stream = new Stream($loggerConfig['logdir'].'/trigger-'.date('Y-m-d').'.log');
         $filter = new Priority($loggerConfig['loglevel']);
