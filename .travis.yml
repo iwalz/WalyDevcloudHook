@@ -12,8 +12,7 @@ before_install:
  - php composer.phar install --dev --prefer-source
  - rm -rf vendor/iwalz/walydevcloudhook
  - cp -r ../WalyDevcloudHook vendor/iwalz/walydevcloudhook
- - cd vendor/iwalz/walydevcloudhook
- - ls -la ../
+ - cd vendor/iwalz/waly-devcloud-hook
 
 script:
  - cd tests/
