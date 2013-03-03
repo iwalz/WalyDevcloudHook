@@ -47,11 +47,12 @@ class Github
     public function cloneRepository()
     {
         $targetDir = $this->getDirectory() . DIRECTORY_SEPARATOR . $this->payload->getRepository()->getName();
-        die($targetDir);
+
         if (is_dir($targetDir)) {
             $zdpack = new Zdpack();
             $zdpack->deleteFolder($targetDir);
         }
+
         $this->repository = $this->admin->cloneTo(
             $targetDir,
             $this->payload->getRepository()->getUrl()
