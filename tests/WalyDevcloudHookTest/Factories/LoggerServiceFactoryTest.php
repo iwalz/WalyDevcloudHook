@@ -11,7 +11,7 @@ class LoggerServiceFactoryTest extends PHPUnit_Framework_TestCase
             'devcloud_hook' => array(
                 'logger' => array(
                     'loglevel' => \Zend\Log\Logger::DEBUG,
-                    'logdir' => __DIR__ . '/../../../logs'
+                    'logdir' => realpath(__DIR__ . '/../../../../logs')
                 )
             )
         );
