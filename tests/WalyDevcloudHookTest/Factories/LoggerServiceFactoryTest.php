@@ -11,7 +11,7 @@ class LoggerServiceFactoryTest extends PHPUnit_Framework_TestCase
             'devcloud_hook' => array(
                 'logger' => array(
                     'loglevel' => \Zend\Log\Logger::DEBUG,
-                    'logdir' => realpath(__DIR__ . '/../../../../logs')
+                    'logdir' => realpath(__DIR__ . '/../../../logs')
                 )
             )
         );
@@ -23,7 +23,7 @@ class LoggerServiceFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($logger instanceof \Zend\Log\Logger);
 
         $assertLogger = new \Zend\Log\Logger();
-        $writer = new \Zend\Log\Writer\Stream(realpath(__DIR__ . '/../../../../logs').'/trigger-'.date('Y-m-d').'.log');
+        $writer = new \Zend\Log\Writer\Stream(realpath(__DIR__ . '/../../../logs').'/trigger-'.date('Y-m-d').'.log');
         $priority = new \Zend\Log\Filter\Priority(\Zend\Log\Logger::DEBUG);
         $writer->addFilter($priority);
         $assertLogger->addWriter($writer);
