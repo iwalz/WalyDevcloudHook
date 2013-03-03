@@ -1,6 +1,13 @@
 <?php
 
 return array(
+    'bjyauthorize' => array(
+        'guards'                => array(
+            'BjyAuthorize\Guard\Controller' => array(
+                array('controller' => 'WalyDevcloudHook\\Controller\\HookController', 'roles' => array())
+            )
+        )
+    ),
     'devcloud_hook' => array(
         'logger' => array(
             'loglevel' => \Zend\Log\Logger::DEBUG,
