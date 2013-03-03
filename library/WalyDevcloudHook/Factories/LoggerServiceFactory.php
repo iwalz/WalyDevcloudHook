@@ -14,7 +14,7 @@ class LoggerServiceFactory implements FactoryInterface
         $config = $serviceLocator->get('Config');
         $loggerConfig = $config['devcloud_hook']['logger'];
         $logger = new Logger();
-        var_dump($loggerConfig);die;
+
         if (file_exists($loggerConfig['logdir'])) {
             chmod($loggerConfig['logdir'], 0755);
         }

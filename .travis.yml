@@ -10,8 +10,8 @@ before_install:
  - cp ../WalyDevcloudHook/.travis/composer.json ./
  - curl -s http://getcomposer.org/installer | php
  - php composer.phar install --dev --prefer-source
- - rm -rf vendor/iwalz/walydevcloudhook
- - cp -r ../WalyDevcloudHook vendor/iwalz/walydevcloudhook
+ - rm -rf vendor/iwalz/waly-devcloud-hook
+ - cp -r ../WalyDevcloudHook vendor/iwalz/waly-devcloud-hook
  - cd vendor/iwalz/waly-devcloud-hook
 
 script:
