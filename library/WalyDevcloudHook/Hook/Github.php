@@ -48,6 +48,7 @@ class Github
     {
         $targetDir = $this->getDirectory() . DIRECTORY_SEPARATOR . $this->payload->getRepository()->getName();
         if (is_dir($targetDir)) {
+            die('foo');
             $zdpack = new Zdpack();
             $zdpack->deleteFolder($targetDir);
         }
