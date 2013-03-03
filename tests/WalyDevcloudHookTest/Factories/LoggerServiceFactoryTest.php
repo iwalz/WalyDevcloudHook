@@ -19,6 +19,7 @@ class LoggerServiceFactoryTest extends PHPUnit_Framework_TestCase
         $serviceManager = new \Zend\ServiceManager\ServiceManager();
         $serviceManager->setService('Config', $config);
         $loggerServiceFactory = new \WalyDevcloudHook\Factories\LoggerServiceFactory();
+        var_dump($config);die;
         $logger = $loggerServiceFactory->createService($serviceManager);
         $this->assertTrue($logger instanceof \Zend\Log\Logger);
 
