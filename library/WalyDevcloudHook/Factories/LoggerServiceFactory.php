@@ -16,7 +16,7 @@ class LoggerServiceFactory implements FactoryInterface
         $logger = new Logger();
 
         if (file_exists($loggerConfig['logdir'])) {
-            chmod($loggerConfig['logdir'], 0755);
+            chmod($loggerConfig['logdir'], 0777);
         }
         $stream = new Stream($loggerConfig['logdir'].'/trigger-'.date('Y-m-d').'.log');
         $filter = new Priority($loggerConfig['loglevel']);
