@@ -5,6 +5,7 @@ use Gitonomy\Git\Admin;
 use Gitonomy\Git\Repository;
 use WalyDevcloudHook\Hook;
 use WalyDevcloudHook\Hook\Github\Payload;
+use ZendService\ZendServerAPI\Zdpack;
 
 class Github
 {
@@ -45,8 +46,13 @@ class Github
      */
     public function cloneRepository()
     {
+        $targetDir = $this->getDirectory() . DIRECTORY_SEPARATOR . $this->payload->getRepository()->getName();
+        if (is_dir($targetDir)) {
+            $zdpack = new Zdpack();
+            $zdpack->deleteFolder($targetDir);
+        }
         $this->repository = $this->admin->cloneTo(
-            $this->getDirectory() . DIRECTORY_SEPARATOR . $this->payload->getRepository()->getName(),
+            $targetDir,
             $this->payload->getRepository()->getUrl()
         );
         $this->projectDir = $this->repository->getPath();
