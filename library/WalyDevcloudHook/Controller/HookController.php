@@ -30,7 +30,7 @@ class HookController extends AbstractActionController
             $github = new Github($hookData);
             $github->cloneRepository();
             $github->checkoutCommit();
-            $logger->info('Clone repository "' . $github->getRepository() . '" ('.$github->getHeadCommit()->getId().')');
+            $logger->info('Clone repository "' . $github->getRepository()->getName() . '" ('.$github->getHeadCommit()->getId().')');
 
             $tmpDir = rtrim(sys_get_temp_dir(), '/');
 
