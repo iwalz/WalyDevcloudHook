@@ -23,6 +23,7 @@ class HookController extends AbstractActionController
 
                 return $viewModel;
             }
+            set_time_limit(60);
 
             $payload = new PayloadAdapter($json);
             $hookData = $payload->parse();
