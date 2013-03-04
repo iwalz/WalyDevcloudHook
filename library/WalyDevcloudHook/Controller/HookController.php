@@ -69,6 +69,7 @@ class HookController extends AbstractActionController
             );
             $config = $deployment->getPluginManager()->get('config');
             $app = $deployment->applicationGetStatus()->getApplicationInfoByName("http://" . $config->getHost() . '/' . $hookData->getRepository()->getName());
+            $logger->debug($app);
 
             if ($app !== false) {
                 $deployment->applicationRemove($app->getId());
