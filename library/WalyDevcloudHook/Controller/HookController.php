@@ -1,6 +1,7 @@
 <?php
 namespace WalyDevcloudHook\Controller;
 
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZendService\ZendServerAPI\Zdpack;
@@ -10,12 +11,27 @@ use WalyDevcloudHook\Hook\Github\Adapter\PayloadAdapter;
 
 class HookController extends AbstractActionController
 {
+    /**
+     * @var \Zend\Log\Logger
+     */
+    protected $logger = null;
+    protected $config = null;
+
+    public function __construct(ServiceLocatorInterface $serviceLocator = null)
+    {
+        if ($serviceLocator !== null) {
+            $this->serviceLocator = $serviceLocator;
+        }
+
+        $this->logger = $this->serviceLocator->get('logger');
+        $this->config = $this->serviceLocator->get('Config');
+    }
+
     public function indexAction()
     {
         $request = $this->getRequest();
         $viewModel = new ViewModel();
         $viewModel->setTerminal(false);
-        $logger = $this->serviceLocator->get('logger');
 
         if ($request->isPost()) {
             $json = $request->getPost('payload');
@@ -23,7 +39,8 @@ class HookController extends AbstractActionController
 
                 return $viewModel;
             }
-            set_time_limit(60);
+            $settings = $this->config['devcloud_hook']['settings'];
+            set_time_limit($settings['timeout']);
 
             $payload = new PayloadAdapter($json);
             $hookData = $payload->parse();
@@ -31,63 +48,62 @@ class HookController extends AbstractActionController
             $github = new Github($hookData);
             $github->cloneRepository();
             $github->checkoutCommit();
-            $logger->info('Clone repository "' . $hookData->getRepository()->getName() . '" ('.$hookData->getHeadCommit()->getId().')');
-
-            $tmpDir = rtrim(sys_get_temp_dir(), '/');
-
-            $zdpack = new Zdpack();
-            $zdpack->create('test', $tmpDir);
-            $zdpack->deleteFolder($tmpDir.'/test/data');
-            mkdir($tmpDir.'/test/data', 0755);
-
-            $xml = simplexml_load_file($tmpDir.'/test/deployment.xml');
-            unset($xml->parameters);
-            unset($xml->eula);
-            unset($xml->dependencies);
-            file_put_contents($tmpDir.'/test/deployment.xml', (string)$xml->asXML());
-            $logger->debug('Generated deployment.xml');
-            $zdpack->copyFolder($github->getProjectDirectory(), $tmpDir.'/test/data');
-            unlink($tmpDir.'/test.zpk');
-            $zdpack->deleteFolder($tmpDir.'/test/data/.git');
-            $file = $zdpack->pack($tmpDir.'/test', $tmpDir);
-            if ($file) {
-                $logger->debug('Generated .zpk - ' . $file);
-            }
-
-            $zdpack->deleteFolder($tmpDir.'/test');
-            $zdpack->deleteFolder($github->getProjectDirectory());
-            $logger->debug('Deleted tmp folder');
-
-            $deployment = new Deployment(
-                array(
-                    'version' => \ZendService\ZendServerAPI\Version::ZS56,
-                    'name' => 'api',
-                    'key' => 'd99446d17dbef49273e9463bc5fc81be999bc54670ee2deb483e93acb6e9b2e9',
-                    'host' => 'iwalz.my.phpcloud.com',
-                    'port' => 10082
-                )
+            $this->logger->info(
+                'Clone repository "' . $hookData->getRepository()->getName() .
+                '" ('.$hookData->getHeadCommit()->getId().')'
             );
+
+            $file = $this->prepareZpk($github);
+
+            $deployment = new Deployment($settings);
             $config = $deployment->getPluginManager()->get('config');
-            $appStatus = $deployment->applicationGetStatus();
-            $app = $appStatus->getApplicationInfoByName("test");
-            ob_start();
-            var_dump($appStatus);
-            $logger->debug(ob_get_flush());
+            $app = $deployment->applicationGetStatus()->getApplicationInfoByName("test");
 
             if ($app !== false) {
                 $deployment->applicationRemove($app->getId());
                 $deployment->waitForRemoved($app->getId());
-                $logger->debug('Application ' . $app->getId() . ' successful removed');
+                $this->logger->debug('Application ' . $app->getId() . ' successful removed');
             }
+
             $app = $deployment->applicationDeploy(
-                (string)$file,
+                $file,
                 "http://" . $config->getHost() . '/' . $hookData->getRepository()->getName(),
                 false,
                 true
             );
-            $logger->debug('Application ' . $app->getId() . ' successful deployed');
+            $this->logger->debug('Application ' . $app->getId() . ' successful deployed');
         }
 
         return $viewModel;
+    }
+
+    protected function prepareZpk(Github $github)
+    {
+        $tmpDir = rtrim(sys_get_temp_dir(), '/');
+
+        $zdpack = new Zdpack();
+        $zdpack->create('test', $tmpDir);
+        $zdpack->deleteFolder($tmpDir.'/test/data');
+        mkdir($tmpDir.'/test/data', 0755);
+
+        $xml = simplexml_load_file($tmpDir.'/test/deployment.xml');
+        unset($xml->parameters);
+        unset($xml->eula);
+        unset($xml->dependencies);
+        file_put_contents($tmpDir.'/test/deployment.xml', (string)$xml->asXML());
+        $this->logger->debug('Generated deployment.xml');
+        $zdpack->copyFolder($github->getProjectDirectory(), $tmpDir.'/test/data');
+        unlink($tmpDir.'/test.zpk');
+        $zdpack->deleteFolder($tmpDir.'/test/data/.git');
+        $file = $zdpack->pack($tmpDir.'/test', $tmpDir);
+        if ($file) {
+            $this->logger->debug('Generated .zpk - ' . $file);
+        }
+
+        $zdpack->deleteFolder($tmpDir.'/test');
+        $zdpack->deleteFolder($github->getProjectDirectory());
+        $this->logger->debug('Deleted tmp folder');
+
+        return (string)$file;
     }
 }

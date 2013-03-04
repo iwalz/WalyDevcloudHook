@@ -12,6 +12,14 @@ return array(
         'logger' => array(
             'loglevel' => \Zend\Log\Logger::DEBUG,
             'logdir' => realpath(__DIR__ . '/../logs')
+        ),
+        'settings' => array(
+            'version' => \ZendService\ZendServerAPI\Version::ZS56,
+            'name' => 'api',
+            'key' => 'd99446d17dbef49273e9463bc5fc81be999bc54670ee2deb483e93acb6e9b2e9',
+            'host' => 'iwalz.my.phpcloud.com',
+            'port' => 10082,
+            'timeout' => 60
         )
     ),
     'service_manager' => array(
