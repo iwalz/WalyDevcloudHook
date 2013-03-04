@@ -65,7 +65,7 @@ class HookController extends AbstractActionController
             $config = $deployment->getPluginManager()->get('config');
             $app = $deployment->applicationDeploy(
                 $file,
-                "http://" . $config->getHost() . '/' . $payload->getRepository()->getName()
+                "http://" . $config->getHost() . '/' . $hookData->getRepository()->getName()
             );
             $deployment->waitForStableState($app->getId());
             $logger->debug('Application ' . $app->getId() . ' successful deployed');
