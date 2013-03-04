@@ -48,6 +48,7 @@ class HookController extends AbstractActionController
             $logger->debug('Generated deployment.xml');
             $zdpack->copyFolder($github->getProjectDirectory(), $tmpDir.'/test/data');
             unlink($tmpDir.'/test.zpk');
+            $zdpack->deleteFolder($tmpDir.'/test/data/.git');
             $file = $zdpack->pack($tmpDir.'/test', $tmpDir);
             if ($file) {
                 $logger->debug('Generated .zpk - ' . $file);
