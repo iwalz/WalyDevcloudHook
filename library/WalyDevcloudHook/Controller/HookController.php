@@ -37,6 +37,8 @@ class HookController extends AbstractActionController
 
             $zdpack = new Zdpack();
             $zdpack->create('test', $tmpDir);
+            $zdpack->deleteFolder($tmpDir.'/test/data');
+            mkdir($tmpDir.'/test/data', 0755);
 
             $xml = simplexml_load_file($tmpDir.'/test/deployment.xml');
             unset($xml->parameters);
@@ -45,6 +47,7 @@ class HookController extends AbstractActionController
             file_put_contents($tmpDir.'/test/deployment.xml', (string)$xml->asXML());
             $logger->debug('Generated deployment.xml');
             $zdpack->copyFolder($github->getProjectDirectory(), $tmpDir.'/test/data');
+            unlink($tmpDir.'/test.zpk');
             $file = $zdpack->pack($tmpDir.'/test', $tmpDir);
             if ($file) {
                 $logger->debug('Generated .zpk - ' . $file);
