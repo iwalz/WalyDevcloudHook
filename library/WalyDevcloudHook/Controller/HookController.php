@@ -68,9 +68,10 @@ class HookController extends AbstractActionController
                 )
             );
             $config = $deployment->getPluginManager()->get('config');
-            $app = $deployment->applicationGetStatus()->getApplicationInfoByName("test");
+            $appStatus = $deployment->applicationGetStatus();
+            $app = $appStatus->getApplicationInfoByName("test");
             ob_start();
-            var_dump($app);
+            var_dump($appStatus);
             $logger->debug(ob_get_flush());
 
             if ($app !== false) {
