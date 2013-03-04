@@ -53,7 +53,15 @@ class HookController extends AbstractActionController
             $zdpack->deleteFolder($github->getProjectDirectory());
             $logger->debug('Deleted tmp folder');
 
-            $deployment = new Deployment();
+            $deployment = new Deployment(
+                array(
+                    'version' => \ZendService\ZendServerAPI\Version::ZS56,
+                    'name' => 'api',
+                    'key' => 'd99446d17dbef49273e9463bc5fc81be999bc54670ee2deb483e93acb6e9b2e9',
+                    'host' => 'iwalz.my.phpcloud.com',
+                    'port' => 10082
+                )
+            );
             $config = $deployment->getPluginManager()->get('config');
             $app = $deployment->applicationDeploy(
                 $file,
