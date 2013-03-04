@@ -72,6 +72,7 @@ class HookController extends AbstractActionController
 
             if ($app !== false) {
                 $deployment->applicationRemove($app->getId());
+                $logger->debug('Application ' . $app->getId() . ' successful removed');
             }
             $app = $deployment->applicationDeploy(
                 (string)$file,
@@ -79,10 +80,7 @@ class HookController extends AbstractActionController
                 false,
                 true
             );
-            $deployment->waitForStableState($app->getId());
             $logger->debug('Application ' . $app->getId() . ' successful deployed');
-
-            #unlink($file);
         }
 
         return $viewModel;
