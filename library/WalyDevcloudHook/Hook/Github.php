@@ -55,7 +55,8 @@ class Github
 
         $this->repository = $this->admin->cloneTo(
             $targetDir,
-            $this->payload->getRepository()->getUrl()
+            $this->payload->getRepository()->getUrl(),
+            false
         );
         $this->projectDir = $this->repository->getPath();
     }
