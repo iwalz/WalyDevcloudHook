@@ -70,7 +70,7 @@ class HookController extends AbstractActionController
             $deployment->waitForStableState($app->getId());
             $logger->debug('Application ' . $app->getId() . ' successful deployed');
 
-            unlink($file);
+            #unlink($file);
         }
 
         return $viewModel;
