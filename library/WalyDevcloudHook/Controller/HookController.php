@@ -71,7 +71,7 @@ class HookController extends AbstractActionController
             $app = $deployment->applicationGetStatus()->getApplicationInfoByName("http://" . $config->getHost() . '/' . $hookData->getRepository()->getName());
             ob_start();
             var_dump($app);
-            $logger->debug(ob_end_flush());
+            $logger->debug(ob_get_flush());
 
             if ($app !== false) {
                 $deployment->applicationRemove($app->getId());
