@@ -17,15 +17,6 @@ class HookController extends AbstractActionController
     protected $logger = null;
     protected $config = null;
 
-    public function __construct(ServiceLocatorInterface $serviceLocator = null)
-    {
-        if ($serviceLocator !== null) {
-            $this->serviceLocator = $serviceLocator;
-        }
-
-
-    }
-
     public function indexAction()
     {
         $request = $this->getRequest();
