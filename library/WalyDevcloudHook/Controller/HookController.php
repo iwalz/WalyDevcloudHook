@@ -23,8 +23,7 @@ class HookController extends AbstractActionController
             $this->serviceLocator = $serviceLocator;
         }
 
-        $this->logger = $this->serviceLocator->get('logger');
-        $this->config = $this->serviceLocator->get('Config');
+
     }
 
     public function indexAction()
@@ -32,6 +31,8 @@ class HookController extends AbstractActionController
         $request = $this->getRequest();
         $viewModel = new ViewModel();
         $viewModel->setTerminal(false);
+        $this->logger = $this->serviceLocator->get('logger');
+        $this->config = $this->serviceLocator->get('Config');
 
         if ($request->isPost()) {
             $json = $request->getPost('payload');
