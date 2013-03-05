@@ -61,7 +61,8 @@ class HookController extends AbstractActionController
                 $file,
                 "http://" . $config->getHost() . '/' . $hookData->getRepository()->getName(),
                 false,
-                true
+                true,
+                $hookData->getRepository()->getName()
             );
             $this->logger->debug('Application ' . $app->getId() . ' successful deployed');
         }
@@ -71,28 +72,31 @@ class HookController extends AbstractActionController
 
     protected function prepareZpk(Github $github)
     {
+        $payload = $github->getPayload();
+        $projectName = $payload->getRepository()->getName();
         $tmpDir = rtrim(sys_get_temp_dir(), '/');
+        $projectDir = $tmpDir . '/' . $projectName;
 
         $zdpack = new Zdpack();
-        $zdpack->create('test', $tmpDir);
-        $zdpack->deleteFolder($tmpDir.'/test/data');
-        mkdir($tmpDir.'/test/data', 0755);
+        $zdpack->create($projectName, $tmpDir);
+        $zdpack->deleteFolder($projectDir.'/data');
+        mkdir($projectDir.'/data', 0755);
 
-        $xml = simplexml_load_file($tmpDir.'/test/deployment.xml');
+        $xml = simplexml_load_file($projectDir.'/deployment.xml');
         unset($xml->parameters);
         unset($xml->eula);
         unset($xml->dependencies);
-        file_put_contents($tmpDir.'/test/deployment.xml', (string)$xml->asXML());
+        file_put_contents($projectDir.'/deployment.xml', (string)$xml->asXML());
         $this->logger->debug('Generated deployment.xml');
-        $zdpack->copyFolder($github->getProjectDirectory(), $tmpDir.'/test/data');
-        unlink($tmpDir.'/test.zpk');
-        $zdpack->deleteFolder($tmpDir.'/test/data/.git');
-        $file = $zdpack->pack($tmpDir.'/test', $tmpDir);
+        $zdpack->copyFolder($github->getProjectDirectory(), $projectDir.'/data');
+        unlink($tmpDir.'/'.$projectName.'.zpk');
+        $zdpack->deleteFolder($projectDir.'/data/.git');
+        $file = $zdpack->pack($projectDir, $tmpDir);
         if ($file) {
             $this->logger->debug('Generated .zpk - ' . $file);
         }
 
-        $zdpack->deleteFolder($tmpDir.'/test');
+        $zdpack->deleteFolder($projectDir);
         $zdpack->deleteFolder($github->getProjectDirectory());
         $this->logger->debug('Deleted tmp folder');
 

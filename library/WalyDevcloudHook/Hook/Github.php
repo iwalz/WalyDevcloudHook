@@ -41,6 +41,11 @@ class Github
         $this->admin = new Admin();
     }
 
+    public function getPayload()
+    {
+        return $this->payload;
+    }
+
     /**
      * Clone repository to soecified directory
      */
