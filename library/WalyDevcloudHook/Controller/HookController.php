@@ -50,7 +50,7 @@ class HookController extends AbstractActionController
 
             $deployment = new Deployment($settings);
             $config = $deployment->getPluginManager()->get('config');
-            $app = $deployment->applicationGetStatus()->getApplicationInfoByName("test");
+            $app = $deployment->applicationGetStatus()->getApplicationInfoByName($hookData->getRepository()->getName());
 
             if ($app !== false) {
                 $deployment->applicationRemove($app->getId());
