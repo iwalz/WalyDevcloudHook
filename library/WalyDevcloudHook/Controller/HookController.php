@@ -20,16 +20,16 @@ class HookController extends AbstractActionController
     public function indexAction()
     {
         $request = $this->getRequest();
-        $viewModel = new ViewModel();
-        $viewModel->setTerminal(false);
+        $response = $this->getResponse();
         $this->logger = $this->serviceLocator->get('logger');
         $this->config = $this->serviceLocator->get('Config');
 
         if ($request->isPost()) {
             $json = $request->getPost('payload');
             if (!$json) {
+                $response->setStatusCode(400);
 
-                return $viewModel;
+                return $response;
             }
             $settings = $this->config['devcloud_hook']['settings'];
             set_time_limit($settings['timeout']);
@@ -38,6 +38,7 @@ class HookController extends AbstractActionController
             $hookData = $payload->parse();
 
             $github = new Github($hookData);
+            $github->setDirectory(sys_get_temp_dir() . '/repo/');
             $github->cloneRepository();
             $github->checkoutCommit();
             $this->logger->info(
@@ -66,8 +67,9 @@ class HookController extends AbstractActionController
             );
             $this->logger->debug('Application ' . $app->getId() . ' successful deployed');
         }
+        $response->setStatusCode(400);
 
-        return $viewModel;
+        return $response;
     }
 
     protected function prepareZpk(Github $github)
@@ -88,9 +90,10 @@ class HookController extends AbstractActionController
         unset($xml->dependencies);
         file_put_contents($projectDir.'/deployment.xml', (string)$xml->asXML());
         $this->logger->debug('Generated deployment.xml');
+        $zdpack->deleteFolder($github->getProjectDirectory().'/.git');
         $zdpack->copyFolder($github->getProjectDirectory(), $projectDir.'/data');
         unlink($tmpDir.'/'.$projectName.'.zpk');
-        $zdpack->deleteFolder($projectDir.'/data/.git');
+
         $file = $zdpack->pack($projectDir, $tmpDir);
         if ($file) {
             $this->logger->debug('Generated .zpk - ' . $file);
