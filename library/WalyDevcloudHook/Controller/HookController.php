@@ -74,17 +74,29 @@ class HookController extends AbstractActionController
 
     protected function prepareZpk(Github $github)
     {
-        $payload = $github->getPayload();
-        $projectName = $payload->getRepository()->getName();
-        $tmpDir = rtrim(sys_get_temp_dir(), '/');
-        $projectDir = $tmpDir . '/' . $projectName;
+        $payload        = $github->getPayload();
+        $projectName    = $payload->getRepository()->getName();
+        $tmpDir         = rtrim(sys_get_temp_dir(), '/');
+        $projectDir     = $tmpDir . '/' . $projectName;
+        $config         = $github->getConfig();
 
         $zdpack = new Zdpack();
         $zdpack->create($projectName, $tmpDir);
         $zdpack->deleteFolder($projectDir.'/data');
+        $zdpack->deleteFolder($projectDir.'/scripts');
+        mkdir($projectDir, 0755);
         mkdir($projectDir.'/data', 0755);
 
         $xml = simplexml_load_file($projectDir.'/deployment.xml');
+        $xml->docroot = 'data/'.rtrim($config->docroot, '/');
+        if (isset($config->scriptsdir)) {
+            mkdir($projectDir.'/scripts', 0755);
+            $xml->scriptsdir = rtrim($config->scriptsdir, '/');
+
+            rename($github->getProjectDirectory().'/'.$xml->scriptsdir, $projectDir.'/scripts');
+        } else {
+            unset($xml->scriptsdir);
+        }
         unset($xml->parameters);
         unset($xml->eula);
         unset($xml->dependencies);

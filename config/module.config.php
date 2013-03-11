@@ -17,7 +17,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'logger' => 'WalyDevcloudHook\Factories\LoggerServiceFactory'
+            'logger' => 'WalyDevcloudHook\Service\LoggerServiceFactory'
         )
     ),
     'controllers' => array(
